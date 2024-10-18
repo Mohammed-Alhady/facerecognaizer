@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ar">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تسجيل الدخول</title>
+    <style>
+      /* start login page */
+      .login-page .logo {
+        width: 100px !important;
+      }
+
+      .icon {
+        background-color: white;
+        color: rgba(136, 136, 136, 1);
+      }
+      h2 {
+        font-size: 24px;
+      }
+      h3 {
+        font-size: 18px;
+        color: rgba(195, 195, 195, 1);
+      }
+      .login-box {
+        background-color: linear-gradient(
+          rgba(255, 255, 255, 0.1),
+          rgba(255, 255, 255, 0.5)
+        );
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        max-width: 400px;
+        width: 100%;
+      }
+
+      .input-group {
+        background: white;
+        border-radius: 30px;
+        overflow: hidden;
+      }
+
+      .input-group-prepend .input-group-text {
+        border-radius: 20px 0 0 20px;
+      }
+
+      .btn-primary {
+        background-color: rgba(44, 61, 91, 1);
+        border: none;
+        border-radius: 20px;
+        font-weight: bold;
+      }
+
+      .btn-primary:hover {
+        background-color: rgb(55, 76, 110);
+      }
+
+      .forgot-password {
+        cursor: pointer;
+        font-size: 0.9rem;
+      }
+
+      .btn-outline-light {
+        border-radius: 20px;
+        background-color: rgba(194, 225, 255, 1);
+        color: black;
+      }
+      /* end login page */
+    </style>
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+
+    <!-- Google Font: Alexandria -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="src/style/main.css" />
+  </head>
+  <body dir="rtl">
+    <div
+      class="login-page d-flex align-items-center justify-content-center vh-100"
+    >
+      <div class="login-box text-center">
+        <img src="src/assets/logo.png" alt="Logo" class="logo mb-4" />
+        <h2 class="amiri-regular">تسجيل الدخول</h2>
+        <h3 class="mb-4 amiri-regular">تسجيل الدخول إلى حسابك</h3>
+
+        <div class="input-group d-flex align-items-center mb-3">
+          <i class="fas fa-user icon p-2"></i>
+          <input
+            type="text"
+            class="form-control border-0 username"
+            placeholder="اسم المستخدم"
+          />
+        </div>
+
+        <div class="input-group d-flex align-items-center gap-2 mb-3">
+          <i class="fas fa-lock icon p-2"></i>
+          <input
+            type="password"
+            class="form-control border-0 password"
+            placeholder="رمز الدخول"
+          />
+        </div>
+
+        <button
+          class="btn btn-primary btn-block mb-3 login-btn"
+          onclick="login()"
+        >
+          تسجيل دخول
+        </button>
+
+        <p class="forgot-password text-white">نسيت كلمة السر؟</p>
+        <button class="btn btn-outline-light btn-block">تسجيل حساب جديد</button>
+      </div>
+    </div>
+    <script>
+      const loginBtn = document.querySelector(".login-btn");
+      const login = async () => {
+        loginBtn.textContent = "جار تسجيل الدخول";
+        loginBtn.disapeled = true;
+        event.preventDefault(); // Prevent the default form submission
+
+        const username = document.querySelector(".username").value;
+        const password = document.querySelector(".password").value;
+
+        if (username && password) {
+          await sendLoginRequest(username, password);
+        } else {
+          alert("please enter full data");
+        }
+        loginBtn.textContent = "تسجيل الدخول";
+        loginBtn.disapeled = false;
+      };
+
+      async function sendLoginRequest(username, password) {
+        try {
+          const response = await fetch(
+            "https://api-project-blush.vercel.app/token",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ username, password }),
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+
+          const data = await response.json();
+          alert("Login successful:", data);
+          localStorage.setItem("token", data.token);
+          // Handle successful login (e.g., redirect to another page)
+        } catch (error) {
+          alert("Error during login:", error);
+          // Handle error (e.g., show an error message)
+        }
+      }
+    </script>
+  </body>
+</html>
